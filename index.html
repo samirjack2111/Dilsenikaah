@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DilSeNikah – Halal Love Dil Se</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-pink-50 min-h-screen flex items-center justify-center p-4">
+
+  <!-- Main Container -->
+  <div class="w-full max-w-md bg-white p-6 rounded-xl shadow-lg">
+    <h1 class="text-3xl text-center font-bold text-pink-600 mb-2">DilSeNikah</h1>
+    <p class="text-center text-sm text-gray-500 mb-6">Halal Love, Dil Se ❤️</p>
+
+    <!-- SignUp Form -->
+    <div id="signupSection">
+      <h2 class="text-xl font-semibold mb-4 text-center">Sign Up</h2>
+      <input type="text" id="signupName" placeholder="Your Name" class="w-full mb-3 p-2 border rounded" />
+      <input type="email" id="signupEmail" placeholder="Your Email" class="w-full mb-3 p-2 border rounded" />
+      <input type="password" id="signupPassword" placeholder="Password" class="w-full mb-3 p-2 border rounded" />
+      <button onclick="handleSignup()" class="w-full bg-pink-500 text-white py-2 rounded">Register</button>
+      <p class="text-center mt-4 text-sm">Already have an account? <span onclick="switchToLogin()" class="text-pink-500 cursor-pointer">Login</span></p>
+    </div>
+
+    <!-- Login Form -->
+    <div id="loginSection" class="hidden">
+      <h2 class="text-xl font-semibold mb-4 text-center">Login</h2>
+      <input type="email" id="loginEmail" placeholder="Email" class="w-full mb-3 p-2 border rounded" />
+      <input type="password" id="loginPassword" placeholder="Password" class="w-full mb-3 p-2 border rounded" />
+      <button onclick="handleLogin()" class="w-full bg-pink-500 text-white py-2 rounded">Login</button>
+      <p class="text-center mt-4 text-sm">Don't have an account? <span onclick="switchToSignup()" class="text-pink-500 cursor-pointer">Sign Up</span></p>
+    </div>
+
+    <!-- Match Suggestions -->
+    <div id="dashboard" class="hidden">
+      <h2 class="text-xl font-semibold mb-4 text-center">Matches for You 💕</h2>
+      <div id="matchList" class="space-y-3"></div>
+      <button onclick="logout()" class="mt-5 w-full bg-red-500 text-white py-2 rounded">Logout</button>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    const signupSection = document.getElementById("signupSection");
+    const loginSection = document.getElementById("loginSection");
+    const dashboard = document.getElementById("dashboard");
+    const matchList = document.getElementById("matchList");
+
+    function switchToLogin() {
+      signupSection.classList.add("hidden");
+      loginSection.classList.remove("hidden");
+    }
+
+    function switchToSignup() {
+      loginSection.classList.add("hidden");
+      signupSection.classList.remove("hidden");
+    }
+
+    function handleSignup() {
+      const name = document.getElementById("signupName").value.trim();
+      const email = document.getElementById("signupEmail").value.trim();
+      const password = document.getElementById("signupPassword").value;
+
+      if (!name || !email || !password) {
+        alert("Please fill all fields.");
+        return;
+      }
+
+      const user = { name, email, password };
+      localStorage.setItem("dilsenikah_user", JSON.stringify(user));
+      alert("Registration successful! You can now log in.");
+      switchToLogin();
+    }
+
+    function handleLogin() {
+      const email = document.getElementById("loginEmail").value.trim();
+      const password = document.getElementById("loginPassword").value;
+
+      const savedUser = JSON.parse(localStorage.getItem("dilsenikah_user"));
+
+      if (savedUser && savedUser.email === email && savedUser.password === password) {
+        loginSection.classList.add("hidden");
+        showDashboard(savedUser);
+      } else {
+        alert("Invalid credentials.");
+      }
+    }
+
+    function showDashboard(user) {
+      dashboard.classList.remove("hidden");
+      matchList.innerHTML = `
+        <div class="p-4 border rounded shadow">
+          <p><strong>Name:</strong> ${user.name}</p>
+          <p><strong>Email:</strong> ${user.email}</p>
+          <p><strong>Language:</strong> Hindi</p>
+          <p><strong>Faith:</strong> Muslim</p>
+        </div>
+        <div class="p-4 border rounded shadow">
+          <p><strong>Name:</strong> Aisha Begum</p>
+          <p><strong>Email:</strong> aisha@example.com</p>
+          <p><strong>Language:</strong> Hindi</p>
+          <p><strong>Faith:</strong> Muslim</p>
+        </div>
+      `;
+    }
+
+    function logout() {
+      dashboard.classList.add("hidden");
+      signupSection.classList.remove("hidden");
+    }
+  </script>
+</body>
+</html>
